@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empreinte Carbone</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <header>
+        <a href ="/about"><img src="img/burger.png" alt ="b">
+            <div class="img"></div>
+        </a>
+    <div class="wrapper">
+        <div class ="content">
+            <h1>Bienvenue sur cette nouvelle version de l'application !</h1>
+            <h2><%= text %></h2> 
+        </div>
+    </div>
+    </header>
+
+    <main>
+        <h3>  Zone de travail  </h3>
+
+        <div class = subtitle>
+            <h2>Pourcentage entrés</h2>
+            <p><ul id = 'ulBdd'></ul></p>
+
+            <h2>Info véhicule</h2>
+            <p><ul id = 'ulBdd6'></ul></p>
+        </div>
+
+        <div class = subtitle>
+            <h1>Proportions d'utilisations</h1>
+            <p>Proportion d'utilisation des voitures : </p>
+            <button id = 'btnCreate'>Entrez le pourcentage souhaité</button>
+            <p>Proportion d'utilisation des tramways : </p>
+            <button id = 'btnCreate2'>Entrez le pourcentage souhaité</button>
+            <p>Proportion d'utilisation des velibs : </p>
+            <button id = 'btnCreate3'>Entrez le pourcentage souhaité</button>
+        </div>
+
+        <div class = subtitle>
+            <h2> Info Ville</h2>
+            <p><ul id = 'ulBdd5'></ul></p>
+            <h2> Empreinte Carbone Moyenne </h2>
+            <p><ul id = 'ulBdd2'></ul></p>
+        </div>
+        
+        <input class="actualise" type="button" OnClick="javascript:window.location.reload()" value="Validé les pourcentage entrés">
+
+    </main>
+
+</body>
+</html>
+
+<script> // Donner une url pour récuperer le script est meilleure
+
+    readBdd("bdd"); // Affiche BDD 1 à gauche
+    readBdd("bdd2"); // Affiche BDD 2 à droite bas
+    readBdd("bdd5"); // Affiche BDD 5 à droite haut
+    readBdd("bdd6"); // Affiche BDD 6 à gauche haut
+
+    var btnCreate = document.getElementById("btnCreate")
+    btnCreate.addEventListener("click", async e=>{
+        conditions(70); // Valeur a changer pour nouvelle bdd
+    })
+    var btnCreate2 = document.getElementById("btnCreate2")
+    btnCreate2.addEventListener("click", async e=>{
+        conditions(71); // Valeur a changer pour nouvelle bdd
+    })
+    var btnCreate3 = document.getElementById("btnCreate3")
+    btnCreate3.addEventListener("click", async e=>{
+        conditions(72); // Valeur a changer pour nouvelle bdd
+    })
+    async function readBdd(tab){
+        try{
+            if(tab == "bdd"){
+                const ulBdd = document.getElementById("ulBdd")
+                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const bdd = await result.json();
+                let transport = "";
+                bdd.forEach(t=>{
+                const li = document.createElement("li")
+                if(t.id == 70)
+                {
+                    transport = "Voiture"
+                } else if (t.id == 71){
+                    transport = "Tram "
+                } else if (t.id == 72){
+                    transport = "Velib "
+                }
+                li.textContent = "Pourcentage de "+ transport +" : "+ t.percent + " %";
+                li.id = t.id;
+                ulBdd.appendChild(li)
+            }) 
+            } else if(tab == "bdd2"){
+
+                const ulBdd2 = document.getElementById("ulBdd2")
+                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const bdd2 = await result.json();
+
+                bdd2.forEach(t=>{
+                const li = document.createElement("li")
+
+                li.textContent =  "E.C moyennes des " + t.transport +" : "+ t.cfp;
+                li.id = t.id;
+                ulBdd2.appendChild(li)
+            }) 
+
+            }
+            else if(tab == "bdd5"){
+
+                const ulBdd5 = document.getElementById("ulBdd5")
+                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const bdd5 = await result.json();
+
+                bdd5.forEach(t=>{
+                
+                const li4 = document.createElement("li")
+                li4.textContent =  "PopulationSize : " + t.populationsize;
+                li4.id = t.id;
+                ulBdd5.appendChild(li4)
+
+                const li = document.createElement("li")
+                li.textContent =  "CarAvaible : " + t.caravaible;
+                li.id = t.id;
+                ulBdd5.appendChild(li)
+
+                const li2 = document.createElement("li")
+                li2.textContent =  "VelibAvaible : " + t.velibavaible;
+                li2.id = t.id;
+                ulBdd5.appendChild(li2)
+
+                const li3 = document.createElement("li")
+                li3.textContent =  "TramStationAvaible : " + t.tramstationsavaible;
+                li3.id = t.id;
+                ulBdd5.appendChild(li3)
+
+                }) 
+
+            } else if(tab == "bdd6"){
+
+                const ulBdd6 = document.getElementById("ulBdd6")
+                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const bdd6 = await result.json();
+
+                bdd6.forEach(t=>{
+                const li = document.createElement("li")
+
+                li.textContent = t.vehicle + " Used: " + t.usedvehicle + " | Avg Dist : " + t.avgdistvehicle;
+                li.id = t.id;
+                ulBdd6.appendChild(li)
+                }) 
+
+}
+           
+        }
+        
+        catch(e) {
+            console.log(e)
+            console.log("Error reading the bdd.")
+        }
+    }
+
+
+    // CONDITIONS FOR %
+
+
+    async function conditions(id){
+        let good = false;
+        const jsonRequest = {}
+        while (!good){
+            jsonRequest.burger_city = prompt("Enter your %")
+            if (jsonRequest.burger_city == ""){
+                console.log("c'est vide")
+                alert("Veuillez entrer une valeur")
+            } else if(parseInt(jsonRequest.burger_city) < 0){
+                console.log("Valeur negative")
+                alert("Valeur comprise entre 0 et 100 seuleument")
+            } else if(parseInt(jsonRequest.burger_city) > 100){
+                console.log("Valeur trop grande")
+                alert("Valeur comprise entre 0 et 100 seuleument")
+            } else if(jsonRequest.burger_city == null){
+                console.log("button annulé entrer")
+                good = true;
+                
+            }   
+            else {
+                let ok = false;
+                for(let i = 0; i < jsonRequest.burger_city.length; i++){
+                    ok = isNaN(parseInt(jsonRequest.burger_city[i]));
+                    if (ok) {
+                        console.log("Value NaN")
+                        alert("Entier seuleument")
+                        break;
+                    }
+                }
+                if(!ok) {
+                    console.log("Value OK")
+                    const result = await fetch("http://localhost:3000/bdd/" + id, {method: "PUT",
+                    headers: {"content-type": "application/json"}, body: JSON.stringify(jsonRequest) })
+                    const success = await result.json();
+                    alert("UPDATED !")
+                    good = true;
+                }
+            }
+        }
+    }
+</script>
