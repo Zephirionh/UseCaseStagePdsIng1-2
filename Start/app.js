@@ -8,13 +8,16 @@ app.use(express.json())
 
 // Instance BDD
 
-const {Client, Connection} = require('pg')
-const client = new Client({
+const {Pool} = require('pg')
+const pool = new Pool({
     user: "postgres",
     password: "Triforce",
     host: "127.0.0.1",
     port: 5432,
-    database: "burger_city"
+    database: "burger_city",
+    max: 10,
+    connectionTimeoutMillis : 0,
+    idleTimeoutMillis : 0
 })
 
 
@@ -26,7 +29,7 @@ app.listen(port, () => console.info('Listening on port ' + port))
 //Connection BDD
 
 async function start(){
-    await connect();
+    //await connect();
     const bdd = await readBdd("percents");
     const bdd2 = await readBdd("vehiclecarbon");
     console.log(bdd)
@@ -35,7 +38,7 @@ async function start(){
 
 async function connect(){
     try{
-        await client.connect();
+        //await client.connect();
         console.log("Connection to BDD OK !")
     }
     catch(e){
@@ -49,6 +52,7 @@ app.use(express.static('public'))
 app.use('/css', express.static(__dirname + 'public/css'))
 app.use('/js', express.static(__dirname + 'public/js'))
 app.use('/img', express.static(__dirname + 'public/img'))
+app.use('/js', express.static(__dirname + 'public/js'))
 
 // Set views
 
@@ -107,6 +111,19 @@ app.get('/bdd6', async (req, res) => {
     res.send(JSON.stringify(rows))
 })
 
+app.get('/bdd7', async (req, res) => {
+    const tab7 = "history"
+    const rows = await readBdd(tab7);
+    res.setHeader("content-type", "application/json")
+    res.send(JSON.stringify(rows))
+})
+
+app.get('/bdd8', async (req, res) => {
+    const tab8 = "carbonfootprint"
+    const rows = await readBdd(tab8);
+    res.setHeader("content-type", "application/json")
+    res.send(JSON.stringify(rows))
+})
 
 //Get One
 
@@ -200,6 +217,23 @@ app.post('/bdd', async (req, res) => {
 
 })
 
+app.post('/bdd7', async (req, res) => {
+    let result = {}
+    try{
+        const reqJson = req.body;
+        await newLine(reqJson.burger_city[0],reqJson.burger_city[1],reqJson.burger_city[2],reqJson.burger_city[3])
+        var t = reqJson.burger_city;
+        console.log(t);
+        result.success = true;
+    } catch(e){
+        result.success = false;
+    } finally{
+        res.setHeader("content-type", "application/json")
+        res.send(JSON.stringify(result))
+    }
+
+})
+
 //Delete One or Multiple
 
 app.delete('/bdd', async (req, res) => {
@@ -232,7 +266,7 @@ app.delete('/bdd', async (req, res) => {
 async function readOne(id, tab){ // RAJOUTER LA TABLE EN ARG
     const one ="select * from "+ tab + " where id =" + id;
     try {
-        const results = await client.query(one);
+        const results = await pool.query(one);
         return results.rows;
     } catch(e){
         return [];
@@ -244,7 +278,7 @@ async function readBdd(tab) {
     const s1 = "select * from " + tab;
     const s2 = "select surface, nbstationtram from city where id_city = (select max(id_city) from city) "
     try {
-        const results = await client.query(s1);
+        const results = await pool.query(s1);
         return results.rows;
     } catch(e){
         return [];
@@ -257,7 +291,35 @@ async function newLine(t) { // AJOUTER LA TABLE EN ARG
     console.log("in the NewLine");
     try{
         //console.log("in the try");
-        await client.query("insert into percents(percent) values ($1)",[t]); // erreur ici
+        await pool.query("insert into percents(percent) values ($1)",[t]); // erreur ici
+        //console.log("after the Query");
+        return true
+    }
+    catch(e){
+        console.log(e);
+        return false;
+    }
+}
+
+/*
+INSERT INTO
+    history
+    (   carpercent    ,   trampercent   ,   velibpercent, 	citycfp) 
+SELECT  10   ,   10    ,   10	,	100
+FROM    vide
+WHERE   NOT EXISTS
+        (   SELECT  1
+            FROM    history
+            WHERE   citycfp = 100
+        )
+;
+*/
+async function newLine(v1,v2,v3,v4) {
+    //console.log("in the NewLine");
+    try{
+        console.log("in the try");
+        await pool.query("INSERT INTO history(carpercent, trampercent, velibpercent, citycfp) SELECT " + v1 + " , " + v2 + " , " + v3 + " , " + v4 + " FROM vide WHERE NOT EXISTS ( SELECT 1 FROM history WHERE carpercent = " + v1 + " and trampercent = " + v2 + " and velibpercent = " + v3 + " )");
+        console.log(v1 + "," + v2 + "," + v3 + "," + v4)
         //console.log("after the Query");
         return true
     }
@@ -271,7 +333,7 @@ async function newLine(t) { // AJOUTER LA TABLE EN ARG
 
 async function deleteLine(id){ // RAJOUTER ARG NOM DE TABLE
     try{
-        await client.query("delete from percents where id = $1", [id]);
+        await pool.query("delete from percents where id = $1", [id]);
         return true
     }
     catch(e){
@@ -283,7 +345,7 @@ async function deleteLine(id){ // RAJOUTER ARG NOM DE TABLE
 
 async function updateLine(id, value){
     try{
-        await client.query("UPDATE percents SET percent = " + value + " WHERE id = " + id);
+        await pool.query("UPDATE percents SET percent = " + value + " WHERE id = " + id);
         return true
     }
     catch(e){

@@ -1,65 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Empreinte Carbone</title>
-    <link rel="stylesheet" href="css/main.css">
-</head>
-<body>
-    <header>
-        <a href ="/about"><img src="img/burger.png" alt ="b">
-            <div class="img"></div>
-        </a>
-    <div class="wrapper">
-        <div class ="content">
-            <h1>Bienvenue sur cette nouvelle version de l'application !</h1>
-            <h2><%= text %></h2> 
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Empreinte Carbone</title>
+        <link rel="stylesheet" href="css/main.css">
+    </head>
+    <body>
+        <header>
+            <a href ="/about"><img src="img/burger.png" alt ="b">
+                <div class="img"></div>
+            </a>
+        <div class="wrapper">
+            <div class ="content">
+                <h1>Bienvenue sur cette nouvelle version de l'application !</h1>
+                <h2><%= text %></h2> 
+            </div>
         </div>
-    </div>
-    </header>
+        </header>
 
-    <main>
-        <h3>  Zone de travail  </h3>
+        <main>
+            <h3>  Zone de simulation  </h3>
+            <div class = Blocs>
+                <div class = subtitle>
+                    <h2>Pourcentage entrés</h2>
+                    <p><ul id = 'ulBdd'></ul></p>
 
-        <div class = subtitle>
-            <h2>Pourcentage entrés</h2>
-            <p><ul id = 'ulBdd'></ul></p>
+                    <h2>Info véhicule</h2>
+                    <p><ul id = 'ulBdd6'></ul></p>
+                </div>
 
-            <h2>Info véhicule</h2>
-            <p><ul id = 'ulBdd6'></ul></p>
-        </div>
+                <div class = subtitle>
+                    <h1>Proportions d'utilisations</h1>
+                    <p>Proportion d'utilisation des voitures : </p>
+                    <button id = 'btnCreate'>Entrez le pourcentage souhaité</button>
+                    <p>Proportion d'utilisation des tramways : </p>
+                    <button id = 'btnCreate2'>Entrez le pourcentage souhaité</button>
+                    <p>Proportion d'utilisation des velibs : </p>
+                    <button id = 'btnCreate3'>Entrez le pourcentage souhaité</button>
+                </div>
 
-        <div class = subtitle>
-            <h1>Proportions d'utilisations</h1>
-            <p>Proportion d'utilisation des voitures : </p>
-            <button id = 'btnCreate'>Entrez le pourcentage souhaité</button>
-            <p>Proportion d'utilisation des tramways : </p>
-            <button id = 'btnCreate2'>Entrez le pourcentage souhaité</button>
-            <p>Proportion d'utilisation des velibs : </p>
-            <button id = 'btnCreate3'>Entrez le pourcentage souhaité</button>
-        </div>
+                <div class = subtitle>
+                    <h2> Info Ville</h2>
+                    <p><ul id = 'ulBdd5'></ul></p>
+                    <h2> Empreinte Carbone Moyenne </h2>
+                    <p><ul id = 'ulBdd2'></ul></p>
+                </div>
+                
+                <div class = result>
+                    <input class="actualise" type="button" OnClick="javascript:window.location.reload()" value="Valider les pourcentages entrés">
+                    <h4> Empreinte Carbone de la ville </h4>
+                    <div class = right>
+                        <p><ul id = 'ulBdd8'> </ul></p>
+                    </div>
+                </div>
+            </div>
 
-        <div class = subtitle>
-            <h2> Info Ville</h2>
-            <p><ul id = 'ulBdd5'></ul></p>
-            <h2> Empreinte Carbone Moyenne </h2>
-            <p><ul id = 'ulBdd2'></ul></p>
-        </div>
-        
-        <input class="actualise" type="button" OnClick="javascript:window.location.reload()" value="Validé les pourcentage entrés">
+            <div class = subtitle2>
+                <h4><a href="#modal" class="js-modal"> History</a></h4>
+            </div>
+            <footer id ="modal" class="modal" aria-hiden="true" role="dialog" style="display:none;">
+                <div class= subtitle>
+                    <div id ="modal2"class="modal-wrapper js-modal-stop">
+                        <button class="js-modal-close">Fermer la fenêtre modale</button>
+                        <br/>
+                        <br/>
+                        <h1>History</h1>
+                        <br/>
+                    </div>
+                </div>
+            </footer>
 
-    </main>
+        </main>
+    </body>
 
-</body>
+    
+    
 </html>
 
-<script> // Donner une url pour récuperer le script est meilleure
+<script> // Donner une url pour récuperer le script est meilleure MAIS CA NE FONCTIONNE PAS ! >:'(
+
+
+    ///////////////////
+    // MODAL HISTORY //
+    ///////////////////
+
+    let modal = null
+
+    const openModal = function(e) {
+        e.preventDefault()
+        const target = document.querySelector(e.target.getAttribute('href'))
+        target.style.display = null
+        target.removeAttribute('aria-hidden')
+        target.setAttribute('aria-modal', 'true')
+        modal = target
+        modal.addEventListener('click', closeModal)
+        modal.querySelector('.js-modal-close').addEventListener('click', closeModal)
+        modal.querySelector('.js-modal-stop').addEventListener('click', stopPropagation)
+    }
+
+    const closeModal = function(e) {
+        if (modal === null) return
+        e.preventDefault()
+        modal.style.display = "none"
+        target.setAttribute('aria-hidden', 'true')
+        target.removeAttribute('aria-modal')
+        modal.addEventListener('click', closeModal)
+        modal.querySelector('.js-modal-close').removeEventListener('click', closeModal)
+        modal.querySelector('.js-modal-stop').removeEventListener('click', stopPropagation)
+        modal = null
+    }
+
+    const stopPropagation = function (e) {
+        e.stopPropagation()
+    }
+
+    document.querySelectorAll('.js-modal').forEach(a => {
+        a.addEventListener('click', openModal)
+    })
+    go()
+     async function go(){
+        console.log("go")
+        const ulBddLast = document.getElementById("modal2")
+        console.log("fetch now")
+        const resultLast = await fetch("http://localhost:3000/bdd7", {method : "GET"})
+        const bddLast = await resultLast.json();
+        bddLast.forEach(t=>{
+            console.log("foreach")
+            const br = document.createElement("br")
+            const liLast = document.createElement("p")
+            const val = document.createElement("h4")
+            liLast.textContent = "Car Percent : "+ t.carpercent + " | Tram Percent : " + t.trampercent + " | Velib Percent : " + t.velibpercent;
+            val.textContent = t.citycfp + " gCO2 / km"
+            console.log(liLast.textContent)
+            liLast.id = t.id;
+            ulBddLast.appendChild(liLast)
+            ulBddLast.appendChild(val)
+            ulBddLast.appendChild(br)
+        })
+    }
+
+    ////////////////////////////////
+    //AFFICHAGE DE TOUTE LES INFOS//
+    ////////////////////////////////
 
     readBdd("bdd"); // Affiche BDD 1 à gauche
     readBdd("bdd2"); // Affiche BDD 2 à droite bas
     readBdd("bdd5"); // Affiche BDD 5 à droite haut
     readBdd("bdd6"); // Affiche BDD 6 à gauche haut
+    readBdd("bdd8"); // Affiche le resultat
 
     var btnCreate = document.getElementById("btnCreate")
     btnCreate.addEventListener("click", async e=>{
@@ -73,6 +162,11 @@
     btnCreate3.addEventListener("click", async e=>{
         conditions(72); // Valeur a changer pour nouvelle bdd
     })
+
+    ///////////////////////////////     //////////////////////
+    // LIENS AVEC TOUTES LES BDD //  +  //  INSERT INSTORY  //
+    ///////////////////////////////     //////////////////////
+
     async function readBdd(tab){
         try{
             if(tab == "bdd"){
@@ -103,7 +197,7 @@
                 bdd2.forEach(t=>{
                 const li = document.createElement("li")
 
-                li.textContent =  "E.C moyennes des " + t.transport +" : "+ t.cfp;
+                li.textContent =  "E.C moyennes des " + t.transport +" : "+ t.cfp + "  gCO2 / km";
                 li.id = t.id;
                 ulBdd2.appendChild(li)
             }) 
@@ -147,14 +241,63 @@
 
                 bdd6.forEach(t=>{
                 const li = document.createElement("li")
-
-                li.textContent = t.vehicle + " Used: " + t.usedvehicle + " | Avg Dist : " + t.avgdistvehicle;
+                if(t.vehicle == "Walker"){
+                    li.textContent = "Walking : " + t.usedvehicle + " | Avg Dist : " + t.avgdistvehicle;
+                } else {
+                    li.textContent = t.vehicle + " Used: " + t.usedvehicle + " | Avg Dist : " + t.avgdistvehicle;
+                }
                 li.id = t.id;
                 ulBdd6.appendChild(li)
                 }) 
 
-}
-           
+            }
+
+            else if(tab == "bdd8"){
+
+                const ulBdd8 = document.getElementById("ulBdd8")
+                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const bdd8 = await result.json();
+
+                var ecCity;
+                var carP;
+                var tramP;
+                var velibP;
+
+                const li = document.createElement("p")
+                bdd8.forEach(t=>{
+                li.textContent = t.result/1000000000 + " tonnes de CO2";
+                ecCity = t.result/1000000000;
+                //li.id = t.id;
+                }) 
+                ulBdd8.appendChild(li)
+
+                ///////////////////////
+                // Insert to history //
+                ///////////////////////
+
+                //need percents
+
+                const result2 = await fetch("http://localhost:3000/bdd", {method : "GET"})
+                const bdd = await result2.json();
+                bdd.forEach(t=>{
+                    if(t.id == 70)
+                    {
+                        carP = t.percent
+                    } else if (t.id == 71){
+                        tramP = t.percent
+                    } else if (t.id == 72){
+                        velibP = t.percent
+                    }
+                })
+
+                //Insert here
+
+                const jsonRequest = {}
+                jsonRequest.burger_city = [carP,tramP,velibP,ecCity];
+                const result3 = await fetch("http://localhost:3000/bdd7/", {method: "POST",
+                headers: {"content-type": "application/json"}, body: JSON.stringify(jsonRequest) })
+                const success = await result3.json();
+            }           
         }
         
         catch(e) {
@@ -163,8 +306,9 @@
         }
     }
 
-
-    // CONDITIONS FOR %
+    //////////////////////
+    // CONDITIONS FOR % //
+    //////////////////////
 
 
     async function conditions(id){

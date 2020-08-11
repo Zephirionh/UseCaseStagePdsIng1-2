@@ -1,0 +1,9 @@
+{
+    "id": 1,
+    "height": 10,
+    "width": 10,
+    "surface": 100,
+    "budget": 1000000,
+    "price": 750000,
+    "nbstationtram": 20
+    }
