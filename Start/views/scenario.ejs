@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scenario</title>
+</head>
+<body>
+    <h1>
+        Veuillez choisir un scénario
+    </h1>
+
+        <select name="liste" id ="liste" size =1>
+            <option value= 1>"Surface = 100 ; nbStationTram = 10"</option>
+            <option value= 2>"Surface = 20 ; nbStationTram = 3"</option>
+            <option value= 3>"Surface = 75 ; nbStationTram = 50"</option>
+            <option value= 4>"Surface = 50 ; nbStationTram = 5"</option>
+            <option value= 5>"Surface = 40; nbStationTram = 70"</option>
+        </select>
+
+        <input type="button" value= "Valider scenario"
+        onClick='send();'>
+
+</body>
+</html>
+
+<script>
+        function send() {
+            var select = document.getElementById("liste");
+            var val = select.options[select.selectedIndex].value;
+            var obj;
+            if (val == 1){
+                obj = JSON.parse('{ "id": 1, "height": 10, "width": 10,  "surface": 100, "budget":1000000, "price": 750000, "nbstationtram": 10}');
+            } else if(val == 2){
+                obj = JSON.parse('{ "id": 1, "height": 10, "width": 10,  "surface": 20, "budget":1000000, "price": 750000, "nbstationtram": 3}');
+            } else if(val == 3){
+                obj = JSON.parse('{ "id": 1, "height": 10, "width": 10,  "surface": 75, "budget":1000000, "price": 750000, "nbstationtram": 50}');
+            } else if(val == 4){
+                obj = JSON.parse('{ "id": 1, "height": 10, "width": 10,  "surface": 50, "budget":1000000, "price": 750000, "nbstationtram": 5}');
+            } else if(val == 5){
+                obj = JSON.parse('{ "id": 1, "height": 10, "width": 10,  "surface": 40, "budget":1000000, "price": 750000, "nbstationtram": 70}');
+            }
+
+            console.log(obj)
+            console.log("L'index selectionné est : " + val)
+            async function insert(){
+                try{
+                    const jsonRequest = {}
+                    jsonRequest.burger_city = [obj.id, obj.height, obj.width, obj.surface, obj.budget, obj.price, obj.nbstationtram];
+                    const result3 = await fetch("http://localhost:3000/bdd4/"+ obj.id, {method: "PUT",
+                    headers: {"content-type": "application/json"}, body: JSON.stringify(jsonRequest) })
+                    const success = await result3.json();
+                } catch(e){
+                    console.log(e)
+                }
+            }
+
+            insert();
+            alert("Scenario Validé")
+        }
+
+       
+</script>

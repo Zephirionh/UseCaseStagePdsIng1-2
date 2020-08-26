@@ -63,8 +63,8 @@ app.get('', (req, res) => {
     res.render('index', {text : 'This is BCApp'})
 })
 
-app.get('/about', (req, res) => {
-    res.render('about', {text : 'About Page'})
+app.get('/scenario', (req, res) => {
+    res.render('scenario', {text : 'Scenario Page'})
 })
 
 //Get All
@@ -196,6 +196,26 @@ app.put('/bdd/:id', async (req, res) => {
 
 })
 
+app.put('/bdd4/:id', async (req, res) => {
+    let result = {}
+    try{
+        console.log("in the put")
+        const reqJson = req.body;
+        console.log("avant await")
+        await updateBase(reqJson.burger_city[0],reqJson.burger_city[1],reqJson.burger_city[2],reqJson.burger_city[3],reqJson.burger_city[4],reqJson.burger_city[5],reqJson.burger_city[6])
+        console.log("apres await")
+        var t = reqJson.burger_city;
+        console.log(t);
+        result.success = true;
+        console.log(result.success)
+    } catch(e){
+        result.success = false;
+    } finally{
+        res.setHeader("content-type", "application/json")
+        res.send(JSON.stringify(result))
+    }
+
+})
 
 
 //Post 
@@ -233,6 +253,8 @@ app.post('/bdd7', async (req, res) => {
     }
 
 })
+
+
 
 //Delete One or Multiple
 
@@ -349,6 +371,18 @@ async function updateLine(id, value){
         return true
     }
     catch(e){
+        return false;
+    }
+}
+
+async function updateBase(id, height, width, surface, budget, price, nbstationtram){
+    try{
+        await pool.query("UPDATE city SET id = " + id + " , height = " + height + " , width = " + width + " , surface = " + surface + " , budget = " + budget + " , price = " + price + " , nbstationtram = " +  nbstationtram + " where id = 1");
+        console.log("c'est good")
+        return true
+    }
+    catch(e){
+        console.log("c'est pas good")
         return false;
     }
 }
