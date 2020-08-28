@@ -1,5 +1,5 @@
 // Imports
-
+const vm = require('vm');
 const express = require("express")
 const app2 =  express()
 const port = 3001
@@ -11,10 +11,10 @@ app2.use(express.json())
 const {Pool} = require('pg')
 const pool = new Pool({
     user: "postgres",
-    password: "Triforce",
-    host: "127.0.0.1",
+    password: "toto",
+    host: "192.168.1.1",
     port: 5432,
-    database: "burger_city",
+    database: "stage",
     max: 10,
     connectionTimeoutMillis : 0,
     idleTimeoutMillis : 0
@@ -257,7 +257,7 @@ async function Calcul(tab,tab2,tab3,tab4,tab5,tab6){
         updateLine(1,popS,tab2,"populationsize")
         updateLine(1,carA,tab2,"caravaible")
         updateLine(1,velibA,tab2,"velibavaible")
-        updateLine(1,nbstationtram,tab2,"tramstationsavaible")
+        updateLine(1,nbstationtram,tab2,"tramstationavaible")
         console.log("tram :" + nbstationtram);
         // Percents
         let carPercent = results.rows[0].percent
@@ -322,22 +322,34 @@ async function Calcul(tab,tab2,tab3,tab4,tab5,tab6){
         // OFFICIAL A NE PAS TOUCHER 
 
         //Car
+        if (avgDistCar < 0){
+            avgDistCar = 0
+        }
         updateLine(1,usedCar,tab4,"usedvehicle")
         updateLine(1,avgDistCar,tab4,"avgdistvehicle")
         //Tram
+        if (avgDistTram < 0){
+            avgDistTram = 0
+        }
         updateLine(2,usedTram,tab4,"usedvehicle")
         updateLine(2,avgDistTram,tab4,"avgdistvehicle")
         //Velib
+        if (avgDistVelib < 0){
+            avgDistVelib = 0
+        }
         updateLine(3,usedVelib,tab4,"usedvehicle")
         updateLine(3,avgDistVelib,tab4,"avgdistvehicle")
         //Walker
+        if (avgDistWalker < 0){
+            avgDistWalker = 0
+        }
         updateLine(4,Walking,tab4,"usedvehicle")
         updateLine(4,avgDistWalker,tab4,"avgdistvehicle")
 
         //Return EC
 
         //newLine(carPercent,tramPercent,velibPercent,ecArray[4])
-        updateLine(13,ecArray[4],tab6,"result")
+        updateLine(1,ecArray[4],tab6,"result")
         
         app2.get('', (req, res) => {
             res.render('index2', {text : ecArray[4]})

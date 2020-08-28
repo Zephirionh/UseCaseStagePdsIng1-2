@@ -1,5 +1,5 @@
 // Imports
-
+const vm = require('vm');
 const express = require("express")
 const app =  express()
 const port = 3000
@@ -11,10 +11,10 @@ app.use(express.json())
 const {Pool} = require('pg')
 const pool = new Pool({
     user: "postgres",
-    password: "Triforce",
-    host: "127.0.0.1",
+    password: "toto",
+    host: "192.168.1.1",
     port: 5432,
-    database: "burger_city",
+    database: "stage",
     max: 10,
     connectionTimeoutMillis : 0,
     idleTimeoutMillis : 0

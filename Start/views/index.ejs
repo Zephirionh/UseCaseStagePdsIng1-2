@@ -123,7 +123,7 @@
         console.log("go")
         const ulBddLast = document.getElementById("modal2")
         console.log("fetch now")
-        const resultLast = await fetch("http://localhost:3000/bdd7", {method : "GET"})
+        const resultLast = await fetch("http://172.31.249.164:3000/bdd7", {method : "GET"})
         const bddLast = await resultLast.json();
         bddLast.forEach(t=>{
             console.log("foreach")
@@ -171,7 +171,7 @@
         try{
             if(tab == "bdd"){
                 const ulBdd = document.getElementById("ulBdd")
-                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const result = await fetch("http://172.31.249.164:3000/" + tab, {method : "GET"})
                 const bdd = await result.json();
                 let transport = "";
                 bdd.forEach(t=>{
@@ -191,7 +191,7 @@
             } else if(tab == "bdd2"){
 
                 const ulBdd2 = document.getElementById("ulBdd2")
-                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const result = await fetch("http://172.31.249.164:3000/" + tab, {method : "GET"})
                 const bdd2 = await result.json();
 
                 bdd2.forEach(t=>{
@@ -206,7 +206,7 @@
             else if(tab == "bdd5"){
 
                 const ulBdd5 = document.getElementById("ulBdd5")
-                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const result = await fetch("http://172.31.249.164:3000/" + tab, {method : "GET"})
                 const bdd5 = await result.json();
 
                 bdd5.forEach(t=>{
@@ -227,7 +227,7 @@
                 ulBdd5.appendChild(li2)
 
                 const li3 = document.createElement("li")
-                li3.textContent =  "TramStationAvaible : " + t.tramstationsavaible;
+                li3.textContent =  "TramStationAvaible : " + t.tramstationavaible;
                 li3.id = t.id;
                 ulBdd5.appendChild(li3)
 
@@ -236,7 +236,7 @@
             } else if(tab == "bdd6"){
 
                 const ulBdd6 = document.getElementById("ulBdd6")
-                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const result = await fetch("http://172.31.249.164:3000/" + tab, {method : "GET"})
                 const bdd6 = await result.json();
 
                 bdd6.forEach(t=>{
@@ -255,7 +255,7 @@
             else if(tab == "bdd8"){
 
                 const ulBdd8 = document.getElementById("ulBdd8")
-                const result = await fetch("http://localhost:3000/" + tab, {method : "GET"})
+                const result = await fetch("http://172.31.249.164:3000/" + tab, {method : "GET"})
                 const bdd8 = await result.json();
 
                 var ecCity;
@@ -277,7 +277,7 @@
 
                 //need percents
 
-                const result2 = await fetch("http://localhost:3000/bdd", {method : "GET"})
+                const result2 = await fetch("http://172.31.249.164:3000/bdd", {method : "GET"})
                 const bdd = await result2.json();
                 bdd.forEach(t=>{
                     if(t.id == 70)
@@ -294,7 +294,7 @@
 
                 const jsonRequest = {}
                 jsonRequest.burger_city = [carP,tramP,velibP,ecCity];
-                const result3 = await fetch("http://localhost:3000/bdd7/", {method: "POST",
+                const result3 = await fetch("http://172.31.249.164:3000/bdd7/", {method: "POST",
                 headers: {"content-type": "application/json"}, body: JSON.stringify(jsonRequest) })
                 const success = await result3.json();
             }           
@@ -342,7 +342,7 @@
                 }
                 if(!ok) {
                     console.log("Value OK")
-                    const result = await fetch("http://localhost:3000/bdd/" + id, {method: "PUT",
+                    const result = await fetch("http://172.31.249.164:3000/bdd/" + id, {method: "PUT",
                     headers: {"content-type": "application/json"}, body: JSON.stringify(jsonRequest) })
                     const success = await result.json();
                     alert("UPDATED !")
